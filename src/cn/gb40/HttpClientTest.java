@@ -33,8 +33,6 @@ public class HttpClientTest {
 	
 	public static int main(String date) {
 		
-		   System.getProperties().setProperty("http.proxyHost", "183.2.202.49");
-           System.getProperties().setProperty("http.proxyPort", "8888");
 		// 创建一个HttpClient
 		RequestConfig requestConfig = RequestConfig.custom()
 				.setCookieSpec(CookieSpecs.STANDARD_STRICT).build();
@@ -95,11 +93,11 @@ public class HttpClientTest {
 			
 			// 创建一个post请求
 			HttpPost post = new HttpPost("http://xmiles.cn/xmiles-manager/system/login.action");
-			// post.setHeader("Cookie",
-			// "SERVERID=5313e4d40abd77f16efabaa01e4c2358|1472027660|1472027268;Path=/");
+			 post.setHeader("Cookie",
+			 "SERVERID=5313e4d40abd77f16efabaa01e4c2358|1472027660|1472027268;Path=/");
 			//
 			// //注入post数据
-			// post.setEntity(entity);
+//			 post.setEntity(entity);
 			HttpResponse httpResponse = httpClient.execute(post);
 			// //打印登录是否成功信息
 //			 boolean result=printResponse(httpResponse);
@@ -120,7 +118,7 @@ public class HttpClientTest {
 			c = c + ";JSESSIONID=69673CE75A163862736138E668CD3453;"
 					+ "AUTOBG=5B471FC7C5AEEC0A115495380D2FA7DC5326FCA2A36D0D193CD18DB9CD42D33AF5BDFE9FCE1CF7A9CF12A0C14C7AA3B369313BCD6D1D0A9B71C20E55F98F8C5F;";
 			// 将cookie注入到get请求头当中
-		  //	System.out.println("Cookie:" + c);
+		  	System.out.println("Cookie:" + c);
 			HttpPost g = new HttpPost(
 					"http://xmiles.cn/xmiles-manager/discovery/daily/querydiscoverystat.action");
 			g.setHeader("Cookie", c);
