@@ -32,6 +32,9 @@ import com.alibaba.fastjson.JSONObject;
 public class HttpClientTest {
 	
 	public static int main(String date) {
+		
+		   System.getProperties().setProperty("http.proxyHost", "183.2.202.49");
+           System.getProperties().setProperty("http.proxyPort", "8888");
 		// 创建一个HttpClient
 		RequestConfig requestConfig = RequestConfig.custom()
 				.setCookieSpec(CookieSpecs.STANDARD_STRICT).build();

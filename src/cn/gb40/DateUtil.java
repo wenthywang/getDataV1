@@ -14,7 +14,6 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -38,7 +37,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -72,8 +70,6 @@ public class DateUtil extends JPanel {
 	private boolean isShow = false;
 	private Popup pop;
 	private static  JFrame jf;
-	private  JButton button1,button2,button3;
-	private  Container con;
  
 	private JComponent showDate;
  
@@ -178,6 +174,7 @@ public class DateUtil extends JPanel {
 		this.setBackground(Color.WHITE);
 		this.add(showDate, BorderLayout.CENTER);
 		this.setPreferredSize(new Dimension(90, 25));
+
 		this.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		showDate.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent me) {
@@ -240,9 +237,15 @@ public class DateUtil extends JPanel {
 			String date=sdf.format(select.getTime());
 			System.out.println(date);
 			((JLabel) showDate).setText(sdf.format(select.getTime()));
-	      	int result=HttpClientTest.main(date);
+		 	int result=0;
+			try{
+			  	 result=HttpClientTest.main(date);
+			}catch(Exception e){
+				  JOptionPane.showMessageDialog(jf, "出错了"+e.getMessage());
+			}
+	    
 	      	if(result==0){
-	      	  JOptionPane.showMessageDialog(jf, "当天日期没数据");
+	      	  JOptionPane.showMessageDialog(jf, "当前日期没数据");
 //	      		button1= new JButton("显示消息");
 //	      		con=jf.getContentPane();
 //	      		con.add(button1);
@@ -719,7 +722,7 @@ public class DateUtil extends JPanel {
 		DateUtil dateChooser2 = DateUtil.getInstance("yyyy-MM-dd");
 //		JTextField showDate1 = new JTextField("单击选择日期");
 		JLabel showDate2 = new JLabel("单击选择日期");
- 
+	
 //		dateChooser1.register(showDate1);
 		dateChooser2.register(showDate2);
  
