@@ -94,18 +94,19 @@ public class HttpClientTest {
 			// 创建一个post请求
 			HttpPost post = new HttpPost("http://xmiles.cn/xmiles-manager/system/login.action");
 			 post.setHeader("Cookie",
-			 "SERVERID=5313e4d40abd77f16efabaa01e4c2358|1472027660|1472027268;Path=/");
+			 "SERVERID=5313e4d40abd77f16efabaa01e4c2358|1472027660|1472027268;Path=/;"
+			 + "AUTOBG=5B471FC7C5AEEC0A115495380D2FA7DC5326FCA2A36D0D193CD18DB9CD42D33AF5BDFE9FCE1CF7A9CF12A0C14C7AA3B369313BCD6D1D0A9B71C20E55F98F8C5F;");
 			//
 			// //注入post数据
 //			 post.setEntity(entity);
 			HttpResponse httpResponse = httpClient.execute(post);
 			// //打印登录是否成功信息
-//			 boolean result=printResponse(httpResponse);
-//			 if(result){
-//		 System.out.println("登陆成功");
-//			 }else{
-//		 System.out.println("登陆失败");
-//			 }
+			 boolean result1=printResponse(httpResponse);
+			 if(result1){
+		 System.out.println("登陆成功");
+			 }else{
+		 System.out.println("登陆失败");
+			 }
 			// boolean result=false;
 			// while(!result){
 			// temp=printResponse(httpResponse);
@@ -136,7 +137,7 @@ public class HttpClientTest {
 			 result=obj.getIntValue("iTotalRecords");
 			JSONArray json = obj.getJSONArray("aaData");
 			if(result>0){
-				File f=new File("C:\\Users\\Administrator\\Desktop\\test.txt"); 
+				File f=new File("C:\\Users\\辉叔叔\\Desktop\\test.txt"); 
 				FileCopyUtils.copy(content.getBytes(), f);
 			}
 			if (json.size() > 0) {
