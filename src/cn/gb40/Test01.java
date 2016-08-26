@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -42,7 +44,12 @@ public class Test01 {
 		         public void actionPerformed(ActionEvent e)
 		         {
 		        	 String date=jtf2.getText();
-		        	HttpClientTest.main(date);
+		        	try {
+						HttpClientTest.main(date);
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 		         }});
 //		jp.add(jtf1);
 		jp.add(jtf2);

@@ -1,11 +1,12 @@
 package cn.gb40;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HeaderIterator;
@@ -22,7 +23,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.springframework.util.FileCopyUtils;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -31,7 +32,7 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class HttpClientTest {
 	
-	public static int main(String date) {
+	public static int main(String date) throws FileNotFoundException {
 		
 		// 创建一个HttpClient
 		RequestConfig requestConfig = RequestConfig.custom()
@@ -137,19 +138,23 @@ public class HttpClientTest {
 			 result=obj.getIntValue("iTotalRecords");
 			JSONArray json = obj.getJSONArray("aaData");
 			if(result>0){
-				File f=new File("C:\\Users\\辉叔叔\\Desktop\\test.txt"); 
-				FileCopyUtils.copy(content.getBytes(), f);
+				//导出数据
+                	  Test_1.main(json,date);
 			}
-			if (json.size() > 0) {
-				System.out.println("文章总数："+json.size());
-				for (int i = 0; i < json.size(); i++) {
-					JSONObject job = json.getJSONObject(i); // 遍历 jsonarray 数组，把每一个对象转成 json 对象
-					System.out.println("文章标题="+job.get("title")); // 得到 每个对象中的属性值
-				}
-			}
-		} catch (IOException e) {
+//			if (json.size() > 0) {
+//				System.out.println("文章总数："+json.size());
+//				for (int i = 0; i < json.size(); i++) {
+//					JSONObject job = json.getJSONObject(i); // 遍历 jsonarray 数组，把每一个对象转成 json 对象
+//					System.out.println("文章标题="+job.get("title")); // 得到 每个对象中的属性值
+//				}
+//			}
+		} catch (FileNotFoundException e){
+		
+       	 throw new  FileNotFoundException();
+       }catch (IOException e) {
 			e.printStackTrace();
-		} finally {
+		}
+		finally {
 			try {
 				httpClient.close();
 			} catch (IOException e) {

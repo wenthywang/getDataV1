@@ -30,12 +30,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -240,7 +242,12 @@ public class DateUtil extends JPanel {
 		 	int result=0;
 			try{
 			  	 result=HttpClientTest.main(date);
+			}
+			catch(FileNotFoundException e){
+				  result=-1;
+				  JOptionPane.showMessageDialog(jf, "请关闭你已经打开的Excel文件，再执行程序！！");
 			}catch(Exception e){
+				
 				  JOptionPane.showMessageDialog(jf, "出错了"+e.getMessage());
 			}
 	    
@@ -262,7 +269,15 @@ public class DateUtil extends JPanel {
 //						
 //					}
 //	      		 });
+	      	}else if(result==-1){
+	      	     JOptionPane.showMessageDialog(jf, "当前日期有数据，其他数据已导出，除已打开Excel数据。请关闭Excel后重新执行程序");
+	      	}else if(result>0){
+	            JOptionPane.showMessageDialog(jf, "当前日期有数据，数据已导出！");
 	      	}
+	      	else{
+	            JOptionPane.showMessageDialog(jf, "程序出错了，联系辉叔叔");
+	      	}
+	  
 		}
  
 		hidePanel();
