@@ -32,6 +32,8 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class HttpClientTest {
 	
+	private static final String AUTOBG="AUTOBG=5B471FC7C5AEEC0A115495380D2FA7DC5326FCA2A36D0D193CD18DB9CD42D33AF5BDFE9FCE1CF7A9CF12A0C14C7AA3B369313BCD6D1D0A9B71C20E55F98F8C5F;";
+	
 	public static int main(String date) throws FileNotFoundException {
 		
 		// 创建一个HttpClient
@@ -91,12 +93,9 @@ public class HttpClientTest {
 			// valuePairs.add(new BasicNameValuePair("valicode", validateCode));
 			// valuePairs.add(new BasicNameValuePair("autologin", "on"));
 			// UrlEncodedFormEntity entity = new UrlEncodedFormEntity(valuePairs, Consts.UTF_8);
-			
 			// 创建一个post请求
 			HttpPost post = new HttpPost("http://xmiles.cn/xmiles-manager/system/login.action");
-			 post.setHeader("Cookie",
-			 "SERVERID=5313e4d40abd77f16efabaa01e4c2358|1472027660|1472027268;Path=/;"
-			 + "AUTOBG=5B471FC7C5AEEC0A115495380D2FA7DC5326FCA2A36D0D193CD18DB9CD42D33AF5BDFE9FCE1CF7A9CF12A0C14C7AA3B369313BCD6D1D0A9B71C20E55F98F8C5F;");
+			 post.setHeader("Cookie",AUTOBG);
 			//
 			// //注入post数据
 //			 post.setEntity(entity);
@@ -117,8 +116,7 @@ public class HttpClientTest {
 			// 构造一个get请求，用来测试登录cookie是否拿到
 			// 得到post请求返回的cookie信息
 			String c = setCookie(httpResponse);
-			c = c + ";JSESSIONID=69673CE75A163862736138E668CD3453;"
-					+ "AUTOBG=5B471FC7C5AEEC0A115495380D2FA7DC5326FCA2A36D0D193CD18DB9CD42D33AF5BDFE9FCE1CF7A9CF12A0C14C7AA3B369313BCD6D1D0A9B71C20E55F98F8C5F;";
+			c = c + ";"+AUTOBG;
 			// 将cookie注入到get请求头当中
 		  	System.out.println("Cookie:" + c);
 			HttpPost g = new HttpPost(
@@ -222,6 +220,6 @@ public class HttpClientTest {
 			cookiesTmp += key + "=" + cookieMap.get(key) + ";";
 		}
 		
-		return cookiesTmp.substring(0, cookiesTmp.length() - 2);
+		return cookiesTmp.substring(0, cookiesTmp.length() - 1);
 	}
 }
