@@ -42,12 +42,14 @@ public class Test01 {
 		         public void actionPerformed(ActionEvent e)
 		         {
 		        	 String date=jtf2.getText();
-		        	try {
-						HttpClientTest.main(date);
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+
+						try {
+							HttpClientTest.main(date);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+
+					
 		         }});
 //		jp.add(jtf1);
 		jp.add(jtf2);
