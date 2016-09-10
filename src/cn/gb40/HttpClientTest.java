@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -27,6 +28,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.util.FileCopyUtils;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -39,9 +41,10 @@ public class HttpClientTest {
 	private static   CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(requestConfig)
 			.build();
 	private static final String SESSIONID="JSESSIONID=E58EC7B5E9F70A721D6501E151D2947F";
-	private static final  File autobg=new File("C:\\Users\\Administrator\\Desktop\\autobg.json");
+	private static final  File autobg=new File("E:\\mt-ide\\workspace\\Identifying-code\\temp3\\autobg.json");
 	private static final  File resultTxt=new File("C:\\Users\\辉叔叔\\Desktop\\result.txt");
-	
+	private static final File codeJPG=new	 File("E:\\mt-ide\\workspace\\Identifying-code\\temp3\\", "code.jpg");
+	private static final String codeSource="E:\\mt-ide\\workspace\\Identifying-code\\temp3\\code.jpg";
 	
 	public static int main(String date) throws Exception {
 		// 创建一个HttpClient
@@ -57,7 +60,7 @@ public class HttpClientTest {
 			 content=autoLogin(date);
 			 validate=true;
 }catch(Exception e){
-	e.printStackTrace();
+	  e.printStackTrace();
 	  successLogin(true);
 }
          //避免请求两次
@@ -169,7 +172,7 @@ public class HttpClientTest {
 				 CloseableHttpResponse imageResponse = httpClient.execute(getCaptcha);
 						
 				 FileOutputStream out = new
-				 FileOutputStream("C:\\Users\\Administrator\\Desktop\\testOcr\\temp3\\code.jpg");
+				 FileOutputStream(codeSource);
 				 byte[] bytes = new byte[8192];
 				 int len;
 				 while ((len = imageResponse.getEntity().getContent().read(bytes)) != -1) {
@@ -178,8 +181,7 @@ public class HttpClientTest {
 				 out.close();
 				 String validateCode ="";
 				 try {
-				 validateCode = ImageTest.getValidateCode(new
-				 File("C:\\Users\\Administrator\\Desktop\\testOcr\\temp3\\", "code.jpg"));
+				 validateCode = ImageTest.getValidateCode(codeJPG);
 				 } catch (Exception e) {
 				 }
 				 System.out.println(validateCode);
@@ -272,18 +274,25 @@ public class HttpClientTest {
 		
 	}
 	
-	public static String  autoLogin(String date) throws Exception{
-		 Map<String,Object> result2=login2();
-			HttpResponse  httpResponse=(HttpResponse) result2.get("response");
-				String c = setCookie(httpResponse);
-				c = c 	+ ";"+SESSIONID;			// 将cookie注入到get请求头当中
-	            FileReader fr=new FileReader(autobg);
-				String AUTOBG=FileCopyUtils.copyToString(fr);
-				c = c 	+ ";AUTOBG="+AUTOBG;
-				System.out.println(c);
-				CloseableHttpResponse r=query(c,date);
+	public static String  autoLogin(String date)  throws Exception{
+		String content=null;
+		CloseableHttpResponse r=null;
+		try{
+			 Map<String,Object> result2=login2();
+				HttpResponse  httpResponse=(HttpResponse) result2.get("response");
+					String c = setCookie(httpResponse);
+					c = c 	+ ";"+SESSIONID;			// 将cookie注入到get请求头当中
+		            FileReader fr=new FileReader(autobg);
+					String AUTOBG=FileCopyUtils.copyToString(fr);
+					c = c 	+ ";AUTOBG="+AUTOBG;
+					System.out.println(c);
+					 r=query(c,date);
+		}catch(Exception e){
+			throw new Exception();
+		}
+		
 				
-			String content = EntityUtils.toString(r.getEntity(), "UTF-8");
+			 content = EntityUtils.toString(r.getEntity(), "UTF-8");
 			return content;
 		
 	}

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.imageio.ImageIO;
 
 
@@ -25,10 +26,10 @@ public class ImageTest {
     // 存放已经拆分开的单个数字图片的目录，供比对用
     private static final String REMOVE_DIR = "C:\\Users\\Administrator\\Desktop\\testOcr\\temp3\\remove\\";
     // 存放已经拆分开的单个数字图片的目录，供比对用
-    private static final String TRAIN_DIR = "C:\\Users\\Administrator\\Desktop\\testOcr\\temp3\\train\\";
+    private static final String TRAIN_DIR = "E:\\mt-ide\\workspace\\Identifying-code\\temp3\\train\\";
 
     // 存放比对结果的目录（重新以验证码所含数字命名文件，非常直观）
-    private static final String RESULT_DIR = "C:\\Users\\Administrator\\Desktop\\testOcr\\temp3\\result";
+    private static final String RESULT_DIR = "E:\\mt-ide\\workspace\\Identifying-code\\temp3\\result";
 
     // 存放比对图片与代表数字的Map
     private static Map<BufferedImage, String> trainMap = new HashMap<BufferedImage, String>();
@@ -377,7 +378,7 @@ public class ImageTest {
         
         
          result= result.replaceAll("#", "");
-        ImageIO.write(image, "JPG", new File(RESULT_DIR, result + ".jpg"));
+       // ImageIO.write(image, "JPG", new File(RESULT_DIR, result + ".jpg"));
         
         return result;
     }
