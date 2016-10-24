@@ -78,7 +78,7 @@ public class DateUtil extends JPanel {
 	public static DateUtil getInstance() {
 		return new DateUtil();
 	}
- 
+	
 	public static DateUtil getInstance(Date date) {
 		return new DateUtil(date);
 	}

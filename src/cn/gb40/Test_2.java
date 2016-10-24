@@ -11,20 +11,19 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 
 public class Test_2 {
-
-
+	
+	private static final  File resultTxt=new File(HttpClientTest.root+"根据文章ID统计结果.txt");
+	private static final String excelName=HttpClientTest.root+"根据文章ID统计结果";
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void main(JSONArray json,String date) throws FileNotFoundException {
         JSONArray array = json;
@@ -107,10 +106,10 @@ public class Test_2 {
         
         
    
-        File writename = new File("C:\\Users\\辉叔叔\\Desktop\\根据文章ID统计结果.txt"); // 相对路径，如果没有则要建立一个新的output。txt文件
+//        File writename = new File("C:\\Users\\Administrator\\Desktop\\根据文章ID统计结果.txt"); // 相对路径，如果没有则要建立一个新的output。txt文件
                     try {
-						writename.createNewFile();
-						   BufferedWriter out = new BufferedWriter(new FileWriter(writename));
+                    	resultTxt.createNewFile();
+						   BufferedWriter out = new BufferedWriter(new FileWriter(resultTxt));
 						   out.write("统计记录数："+Count+"\r\n"); // \r\n即为换行
 							out.write("PV总数："+PVCount+"\r\n"); // \r\n即为换行
 							out.write("UV总数："+UVCount+"\r\n"); // \r\n即为换行
@@ -223,7 +222,7 @@ public class Test_2 {
                       row.createCell(1).setCellValue(UVCount);
                       row.getCell(1).setCellStyle(style);
                     // 第六步，将文件存到指定位置  
-                 File f=new File("C:\\Users\\辉叔叔\\Desktop\\根据文章ID统计结果"+date+".xls");
+                 File f=new File(excelName+date+".xls");
                         FileOutputStream fout = new FileOutputStream(f);  
                   	 
                         try {

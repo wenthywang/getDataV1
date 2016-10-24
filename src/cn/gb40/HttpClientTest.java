@@ -11,8 +11,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.filechooser.FileSystemView;
+
 import org.apache.http.Consts;
 import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
@@ -36,15 +39,31 @@ import com.alibaba.fastjson.JSONObject;
  * Created by gavin on 15-7-23.
  */
 public class HttpClientTest {
+	
+	
+	public  static String root="";
+	/**
+	 * 初始化桌面路径
+	 */
+    static  {
+		File desktopDir = FileSystemView.getFileSystemView()
+				.getHomeDirectory();
+			String desktopPath = desktopDir.getAbsolutePath();
+			root=desktopPath+"\\";
+	}
+	
 	private static	RequestConfig requestConfig = RequestConfig.custom()
 			.setCookieSpec(CookieSpecs.STANDARD_STRICT).build();
 	private static   CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(requestConfig)
 			.build();
-	private static final String SESSIONID="JSESSIONID=E58EC7B5E9F70A721D6501E151D2947F";
-	private static final  File autobg=new File("E:\\mt-ide\\workspace\\Identifying-code\\temp3\\autobg.json");
-	private static final  File resultTxt=new File("C:\\Users\\辉叔叔\\Desktop\\result.txt");
+	private static final String SESSIONID="JSESSIONID=B3BDA5127E1CC9F088A889A2E713F492;";
+   //导出目录以及操作目录
+	private    static  File autobg= new File(root+"autobg.json");
+	private    static  File resultTxt=new File(root+"result.txt");
 	private static final File codeJPG=new	 File("E:\\mt-ide\\workspace\\Identifying-code\\temp3\\", "code.jpg");
 	private static final String codeSource="E:\\mt-ide\\workspace\\Identifying-code\\temp3\\code.jpg";
+	
+
 	
 	public static int main(String date) throws Exception {
 		// 创建一个HttpClient
@@ -68,6 +87,7 @@ public class HttpClientTest {
 			 content=autoLogin(date);
 		}
 			System.out.println(content);
+			FileCopyUtils.copy(content.getBytes(), resultTxt);
 			JSONObject obj = JSONObject.parseObject(content);
 			 result=obj.getIntValue("iTotalRecords");
 			JSONArray json = obj.getJSONArray("aaData");
@@ -102,27 +122,27 @@ public class HttpClientTest {
 	public static boolean printResponse(HttpResponse httpResponse)
 			throws ParseException, IOException {
 		// 获取响应消息实体
-//		HttpEntity entity = httpResponse.getEntity();
+		HttpEntity entity = httpResponse.getEntity();
 		boolean result = false;
 		// 响应状态
-//		System.out.println("status:" + httpResponse.getStatusLine());
+		System.out.println("status:" + httpResponse.getStatusLine());
 		if (httpResponse.getStatusLine().toString().indexOf("302") > 0) {
 			result = true;
 		}
 		
-	/*	System.out.println("headers:");
-		HeaderIterator iterator = httpResponse.headerIterator();
-		while (iterator.hasNext()) {
-			 iterator.next();
-			System.out.println("\t" + iterator.next());
-		}
+//		System.out.println("headers:");
+//		HeaderIterator iterator = httpResponse.headerIterator();
+//		while (iterator.hasNext()) {
+//			 iterator.next();
+//			System.out.println("\t" + iterator.next());
+//		}
 		// 判断响应实体是否为空
 		if (entity != null) {
 			String responseString = EntityUtils.toString(entity);
 			System.out.println("response length:" + responseString.length());
 			System.out.println("response content:" + responseString.replace("\r\n", ""));
 			
-		}*/
+		}
 		return result;
 	}
 	
@@ -241,7 +261,10 @@ public class HttpClientTest {
 	public static Map<String,Object> login2() throws ClientProtocolException, IOException{
 		HttpPost post = new HttpPost("http://xmiles.cn/xmiles-manager/system/login.action");
 		// //注入post数据
-		 post.setHeader("Cookie", SESSIONID);
+		 FileReader fr=new FileReader(autobg);
+			String AUTOBG=FileCopyUtils.copyToString(fr);
+			String cookie=SESSIONID+"AUTOBG="+AUTOBG;
+		     post.setHeader("Cookie",cookie );
 			HttpResponse httpResponse = httpClient.execute(post);
 			Map<String,Object>dataMap=new HashMap<String,Object>();
 			dataMap.put("result", printResponse(httpResponse));
@@ -284,7 +307,7 @@ public class HttpClientTest {
 					c = c 	+ ";"+SESSIONID;			// 将cookie注入到get请求头当中
 		            FileReader fr=new FileReader(autobg);
 					String AUTOBG=FileCopyUtils.copyToString(fr);
-					c = c 	+ ";AUTOBG="+AUTOBG;
+					c = c 	+ "AUTOBG="+AUTOBG;
 					System.out.println(c);
 					 r=query(c,date);
 		}catch(Exception e){
