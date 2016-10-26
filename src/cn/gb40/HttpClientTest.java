@@ -56,7 +56,7 @@ public class HttpClientTest {
 			.setCookieSpec(CookieSpecs.STANDARD_STRICT).build();
 	private static   CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(requestConfig)
 			.build();
-	private static final String SESSIONID="JSESSIONID=B3BDA5127E1CC9F088A889A2E713F492;";
+	private static final String SESSIONID="JSESSIONID=3620273510BB4CA5B71EC79C17417B30;";
    //导出目录以及操作目录
 	private    static  File autobg= new File(root+"autobg.json");
 	private    static  File resultTxt=new File(root+"result.txt");
