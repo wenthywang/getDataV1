@@ -129,6 +129,8 @@ public class HttpClientTest {
 		if (httpResponse.getStatusLine().toString().indexOf("302") > 0) {
 			result = true;
 		}
+		
+		
 		//根据返回的响应码判断
 		if(!result){
 			successLogin(true);
