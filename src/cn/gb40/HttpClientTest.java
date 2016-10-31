@@ -129,7 +129,10 @@ public class HttpClientTest {
 		if (httpResponse.getStatusLine().toString().indexOf("302") > 0) {
 			result = true;
 		}
-		
+		//根据返回的响应码判断
+		if(!result){
+			successLogin(true);
+		}
 //		System.out.println("headers:");
 //		HeaderIterator iterator = httpResponse.headerIterator();
 //		while (iterator.hasNext()) {
@@ -309,13 +312,11 @@ public class HttpClientTest {
 					String AUTOBG=FileCopyUtils.copyToString(fr);
 					c = c 	+ "AUTOBG="+AUTOBG;
 					System.out.println(c);
-					 r=query(c,date);
+					r=query(c,date);
 		}catch(Exception e){
 			throw new Exception();
 		}
-		
-				
-			 content = EntityUtils.toString(r.getEntity(), "UTF-8");
+			content = EntityUtils.toString(r.getEntity(), "UTF-8");
 			return content;
 		
 	}
