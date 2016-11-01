@@ -26,7 +26,7 @@ public class ImageTest {
     // 存放已经拆分开的单个数字图片的目录，供比对用
     private static final String REMOVE_DIR = "C:\\Users\\Administrator\\Desktop\\testOcr\\temp3\\remove\\";
     // 存放已经拆分开的单个数字图片的目录，供比对用
-    private static final String TRAIN_DIR = "E:\\mt-ide\\workspace\\Identifying-code\\temp3\\train\\";
+    private static final String TRAIN_DIR = HttpClientTest.root+"Identifying-code\\temp3\\train\\";
 
     // 存放比对结果的目录（重新以验证码所含数字命名文件，非常直观）
     private static final String RESULT_DIR = "E:\\mt-ide\\workspace\\Identifying-code\\temp3\\result";
@@ -55,6 +55,7 @@ public class ImageTest {
         try {
             // 将TRAIN_DIR目录的供比对的图片装载进来
             File dir = new File(TRAIN_DIR);
+            System.out.println(TRAIN_DIR);
             File[] files = dir.listFiles(new ImageFileFilter("jpg"));
             for (File file : files) {
                 trainMap.put(ImageIO.read(file), file.getName().charAt(0) + "");

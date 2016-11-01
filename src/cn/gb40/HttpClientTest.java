@@ -42,6 +42,8 @@ public class HttpClientTest {
 	
 	
 	public  static String root="";
+	private static  String SESSIONID="JSESSIONID=A1AF53924DAFE902A8175BD1AF1E16D1;";
+	private    static  File autobg= new File(root+"autobg.json");
 	/**
 	 * 初始化桌面路径
 	 */
@@ -50,18 +52,30 @@ public class HttpClientTest {
 				.getHomeDirectory();
 			String desktopPath = desktopDir.getAbsolutePath();
 			root=desktopPath+"\\";
+			      File autobgtemp= new File(root+"autobg.json");
+			 FileReader fr=null;
+			try {
+				fr = new FileReader(autobgtemp);
+				String AUTOBG=FileCopyUtils.copyToString(fr);
+				SESSIONID =AUTOBG.split(";")[1]+";";
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 	}
 	
 	private static	RequestConfig requestConfig = RequestConfig.custom()
 			.setCookieSpec(CookieSpecs.STANDARD_STRICT).build();
 	private static   CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(requestConfig)
 			.build();
-	private static final String SESSIONID="JSESSIONID=3620273510BB4CA5B71EC79C17417B30;";
+
    //导出目录以及操作目录
-	private    static  File autobg= new File(root+"autobg.json");
+
 	private    static  File resultTxt=new File(root+"result.txt");
-	private static final File codeJPG=new	 File("E:\\mt-ide\\workspace\\Identifying-code\\temp3\\", "code.jpg");
-	private static final String codeSource="E:\\mt-ide\\workspace\\Identifying-code\\temp3\\code.jpg";
+//	private static final File codeJPG=new	 File("E:\\mt-ide\\workspace\\Identifying-code\\temp3\\", "code.jpg");
+//	private static final String codeSource="E:\\mt-ide\\workspace\\Identifying-code\\temp3\\code.jpg";
+	private static final File codeJPG=new	 File(root+"Identifying-code\\temp3\\", "code.jpg");
+	private static final String codeSource=root+"Identifying-code\\temp3\\code.jpg";
 	
 
 	
@@ -133,7 +147,7 @@ public class HttpClientTest {
 		
 		//根据返回的响应码判断
 		if(!result){
-			successLogin(true);
+//			successLogin(true);
 		}
 //		System.out.println("headers:");
 //		HeaderIterator iterator = httpResponse.headerIterator();
@@ -268,7 +282,7 @@ public class HttpClientTest {
 		// //注入post数据
 		 FileReader fr=new FileReader(autobg);
 			String AUTOBG=FileCopyUtils.copyToString(fr);
-			String cookie=SESSIONID+"AUTOBG="+AUTOBG;
+			String cookie=SESSIONID+AUTOBG.split(";")[0]+";";
 		     post.setHeader("Cookie",cookie );
 			HttpResponse httpResponse = httpClient.execute(post);
 			Map<String,Object>dataMap=new HashMap<String,Object>();
