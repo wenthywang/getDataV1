@@ -8,11 +8,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -40,6 +42,7 @@ public class Test_1 {
             e.setUV(rows.getString("UV"));
             e.setCk_module(rows.getString("ck_module"));
             e.setDiscoveryid(rows.getString("discoveryid"));
+            e.setPushdate2(rows.getString("pushdate"));
             resultList.add(e);
         }
         int PVCount=0;
@@ -160,6 +163,9 @@ public class Test_1 {
                     cell = row.createCell(2);
                     cell.setCellValue("UV");  
                     cell.setCellStyle(style);  
+                    cell = row.createCell(3);
+                    cell.setCellValue("发布日期");  
+                    cell.setCellStyle(style);  
                   
               
                     // 第五步，写入实体数据 实际应用中这些数据从数据库得到，  
@@ -173,6 +179,7 @@ public class Test_1 {
                         row.createCell(0).setCellValue(e.getTitle());
                         row.createCell(1).setCellValue(e.getPvcount());
                         row.createCell(2).setCellValue(e.getUvcount());
+                        row.createCell(3).setCellValue(e.getPushdate2());
                     }  
                     row=sheet.createRow(resultList.size()+2);
                     row.createCell(1).setCellValue("------文章ID相同的文章有以下----");

@@ -25,8 +25,22 @@ public class entity {
 	private int pvcount;
 	private int uvcount;
 	private String discoveryid;
+	private String pushdate2;
 
 	
+	
+	/**
+	 * @return 返回 pushdate2。
+	 */
+	public String getPushdate2() {
+		return pushdate2;
+	}
+	/**
+	 * @param pushdate2 设置 pushdate2。
+	 */
+	public void setPushdate2(String pushdate2) {
+		this.pushdate2 = pushdate2;
+	}
 	/**
 	 * @return 返回 pvcount。
 	 */
@@ -134,6 +148,15 @@ public class entity {
 	 */
 	public void setDiscoveryid(String discoveryid) {
 		this.discoveryid = discoveryid;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "entity [time=" + time + ", UV=" + UV + ", PV=" + PV + ", title=" + title + ", ck_module=" + ck_module
+				+ ", pushdate=" + pushdate + ", pvcount=" + pvcount + ", uvcount=" + uvcount + ", discoveryid="
+				+ discoveryid + ", pushdate2=" + pushdate2 + "]";
 	}
 	
 	
