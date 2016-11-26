@@ -237,11 +237,7 @@ public class Test_1 {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}  
-                    try{
-                    	  Test_2.main(json,date);
-                    }catch (FileNotFoundException e){
-                    	 throw new  FileNotFoundException();
-                    }
+                  
                        
 }
 }

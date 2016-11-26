@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.filechooser.FileSystemView;
 
@@ -34,13 +36,21 @@ import org.springframework.util.FileCopyUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-
 /**
- * Created by gavin on 15-7-23.
+ * 
+ * <pre>
+ * httpClient 请求后台数据并生成excel 报表。
+ * </pre>
+ * @author wangwenhui   946374340@qq.com
+ * @version 1.00.00
+ * <pre>
+ * 修改记录
+ *    修改后版本:     修改人：  修改日期:     修改内容: 
+ * </pre>
  */
 public class HttpClientTest {
 	
-	
+
 	public  static String root="";
 	private static  String SESSIONID="JSESSIONID=A1AF53924DAFE902A8175BD1AF1E16D1;";
 	private    static  File autobg= new File(root+"autobg.json");
@@ -79,7 +89,7 @@ public class HttpClientTest {
 	
 
 	
-	public static int main(String date) throws Exception {
+	public static int main(final String date) throws Exception {
 		// 创建一个HttpClient
 		     int result=0;
 		     //没有autoId调用
@@ -104,11 +114,37 @@ public class HttpClientTest {
 			FileCopyUtils.copy(content.getBytes(), resultTxt);
 			JSONObject obj = JSONObject.parseObject(content);
 			 result=obj.getIntValue("iTotalRecords");
-			JSONArray json = obj.getJSONArray("aaData");
+			final JSONArray json = obj.getJSONArray("aaData");
 			if(result>0){
 				try{
-				//导出数据
-                 Test_1.main(json,date);
+				//导出数据 使用线程池 分开线线程执行
+					     ExecutorService exec = Executors.newFixedThreadPool(2); 
+					     exec.execute(new Runnable() {
+								@Override
+								public void run() {
+									 try {
+										 //执行文章id任务
+										Test_1.main(json,date);
+									} catch (FileNotFoundException e) {
+				                       e.printStackTrace();
+									}
+								}
+							});
+					     exec.execute(new Runnable() {
+								@Override
+								public void run() {
+									 try {
+										 //执行标题线程
+										Test_2.main(json,date);
+									} catch (FileNotFoundException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+								}
+							});
+                
+          
+                 
 //			if (json.size() > 0) {
 //				System.out.println("文章总数："+json.size());
 //				for (int i = 0; i < json.size(); i++) {
@@ -116,9 +152,7 @@ public class HttpClientTest {
 //					System.out.println("文章标题="+job.get("title")); // 得到 每个对象中的属性值
 //				}
 //			}
-		} catch (FileNotFoundException e){
-       	 throw new  FileNotFoundException();
-       }catch ( Exception e) {
+		} catch ( Exception e) {
 					FileCopyUtils.copy(content.getBytes(), resultTxt);
 			}
 			if (json.size() > 0) {
