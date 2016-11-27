@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.swing.filechooser.FileSystemView;
 
@@ -53,7 +51,11 @@ public class HttpClientTest {
 
 	public  static String root="";
 	private static  String SESSIONID="JSESSIONID=A1AF53924DAFE902A8175BD1AF1E16D1;";
-	private    static  File autobg= new File(root+"autobg.json");
+	/**
+	 * 存放cookie数据的文件.json
+	 */
+	private    static  String autobg;
+
 	/**
 	 * 初始化桌面路径
 	 */
@@ -62,12 +64,14 @@ public class HttpClientTest {
 				.getHomeDirectory();
 			String desktopPath = desktopDir.getAbsolutePath();
 			root=desktopPath+"\\";
-			      File autobgtemp= new File(root+"autobg.json");
+			  File autobgtemp= new File(root+"autobg.json");
+			  autobg=root+"autobg.json";
 			 FileReader fr=null;
 			try {
 				fr = new FileReader(autobgtemp);
 				String AUTOBG=FileCopyUtils.copyToString(fr);
 				SESSIONID =AUTOBG.split(";")[1]+";";
+			fr.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -90,6 +94,10 @@ public class HttpClientTest {
 
 	
 	public static int main(final String date) throws Exception {
+		System.out.println(root);
+		System.out.println(autobg);
+	
+		
 		// 创建一个HttpClient
 		     int result=0;
 		     //没有autoId调用
@@ -118,8 +126,7 @@ public class HttpClientTest {
 			if(result>0){
 				try{
 				//导出数据 使用线程池 分开线线程执行
-					     ExecutorService exec = Executors.newFixedThreadPool(2); 
-					     exec.execute(new Runnable() {
+					     ThreadPoolUtil.executorService.execute(new Runnable() {
 								@Override
 								public void run() {
 									 try {
@@ -130,7 +137,7 @@ public class HttpClientTest {
 									}
 								}
 							});
-					     exec.execute(new Runnable() {
+					     ThreadPoolUtil.executorService.execute(new Runnable() {
 								@Override
 								public void run() {
 									 try {
@@ -164,6 +171,9 @@ public class HttpClientTest {
 			}
 
 			}
+			
+
+			
 			return result;
 	}
 	
@@ -305,7 +315,7 @@ public class HttpClientTest {
 							}
 						
 					}
-				FileCopyUtils.copy(AUTOBG.getBytes(), autobg);
+				FileCopyUtils.copy(AUTOBG.getBytes(), new File(autobg));
 				dataMap.put("result", printResponse(httpResponse));
 				dataMap.put("response", httpResponse);
 				return dataMap;
@@ -316,6 +326,7 @@ public class HttpClientTest {
 		// //注入post数据
 		 FileReader fr=new FileReader(autobg);
 			String AUTOBG=FileCopyUtils.copyToString(fr);
+			fr.close();
 			String cookie=SESSIONID+AUTOBG.split(";")[0]+";";
 		     post.setHeader("Cookie",cookie );
 			HttpResponse httpResponse = httpClient.execute(post);
@@ -359,9 +370,35 @@ public class HttpClientTest {
 					String c = setCookie(httpResponse);
 					c = c 	+ ";"+SESSIONID;			// 将cookie注入到get请求头当中
 		            FileReader fr=new FileReader(autobg);
-					String AUTOBG=FileCopyUtils.copyToString(fr);
-					c = c 	+ "AUTOBG="+AUTOBG;
+					final String AUTOBG=FileCopyUtils.copyToString(fr);
+					c = c 	+AUTOBG;
 					System.out.println(c);
+					fr.close();
+					final int length=c.split(";").length;
+					final String tempC=c;
+					//使用線程池判斷是否需要重新生成新的autobg
+					  ThreadPoolUtil.executorService.execute(new Runnable() {
+						@Override
+						public void run() {
+							//判断是否有新的jessionID 存在就保存在本地文件中
+							if(length>4){
+								String lastJessionId=	tempC.split(";")[4]+";";
+						if(!lastJessionId.equals(SESSIONID)){
+							//拼装新的autobg
+							String newAutoBg=AUTOBG.split(";")[0]+";"+lastJessionId;
+							try {
+								FileCopyUtils.copy(newAutoBg.getBytes(), new File(autobg));
+							} catch (IOException e) {
+								System.out.println("FileCopyUtils occur exception");
+							}
+							System.out.println("copy new autobg success!");
+						}else{
+							System.out.println("last new JESSIONID is the same with the old JESSIONID,so not copy to the autobg file");
+						}
+						}
+						}
+					});
+				
 					r=query(c,date);
 		}catch(Exception e){
 			throw new Exception();
