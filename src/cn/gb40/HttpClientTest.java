@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.swing.filechooser.FileSystemView;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Consts;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -374,28 +375,40 @@ public class HttpClientTest {
 					c = c 	+AUTOBG;
 					System.out.println(c);
 					fr.close();
-					final int length=c.split(";").length;
+					
 					final String tempC=c;
 					//使用線程池判斷是否需要重新生成新的autobg
 					  ThreadPoolUtil.executorService.execute(new Runnable() {
 						@Override
 						public void run() {
 							//判断是否有新的jessionID 存在就保存在本地文件中
-							if(length>4){
-								String lastJessionId=	tempC.split(";")[4]+";";
+									String[] cookie=tempC.split(";");
+									String lastJessionId=SESSIONID;
+								for(int i=0;i<cookie.length;i++){
+									if(cookie[i].indexOf("JSESSIONID=")!=-1){
+										if(!StringUtils.equals(cookie[i]+";", SESSIONID)){
+											lastJessionId=cookie[i]+";";
+										}else
+										{
+											continue;
+										}
+									}else{
+										continue;
+									}
+								}
 						if(!lastJessionId.equals(SESSIONID)){
 							//拼装新的autobg
 							String newAutoBg=AUTOBG.split(";")[0]+";"+lastJessionId;
 							try {
 								FileCopyUtils.copy(newAutoBg.getBytes(), new File(autobg));
 							} catch (IOException e) {
-								System.out.println("FileCopyUtils occur exception");
+								System.out.println("[autoLogin] FileCopyUtils occur exception");
 							}
-							System.out.println("copy new autobg success!");
+							System.out.println("[autoLogin] copy new autobg success!");
 						}else{
-							System.out.println("last new JESSIONID is the same with the old JESSIONID,so not copy to the autobg file");
+							System.out.println("[autoLogin] last new JESSIONID is the same with the old JESSIONID,so not copy to the autobg file");
 						}
-						}
+						
 						}
 					});
 				
