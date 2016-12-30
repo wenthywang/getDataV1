@@ -38,7 +38,12 @@ public class Test_2 {
             entity e=new entity();
             e.setTime(rows.getString("time").substring(0, 10));
             e.setTitle(rows.getString("title"));
-            e.setPushdate(rows.getString("pushdate").substring(0, 10));
+       try{
+    	    e.setPushdate(rows.getString("pushdate").substring(0, 10));
+       }catch(Exception e3){
+    	  continue;
+       }
+        
             e.setPV(rows.getString("PV"));
             e.setUV(rows.getString("UV"));
             e.setCk_module(rows.getString("ck_module"));
