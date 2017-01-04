@@ -21,14 +21,18 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.util.FileCopyUtils;
@@ -49,7 +53,7 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class HttpClientTest {
 	
-
+	private static  CookieStore cookieStore = new BasicCookieStore();  
 	public  static String root="";
 	private static  String SESSIONID="JSESSIONID=A1AF53924DAFE902A8175BD1AF1E16D1;";
 	/**
@@ -81,8 +85,11 @@ public class HttpClientTest {
 	
 	private static	RequestConfig requestConfig = RequestConfig.custom()
 			.setCookieSpec(CookieSpecs.STANDARD_STRICT).build();
-	private static   CloseableHttpClient httpClient = HttpClients.custom().setDefaultRequestConfig(requestConfig)
+	private static   CloseableHttpClient httpClient = HttpClients.custom().
+			setDefaultRequestConfig(requestConfig)
+			.setDefaultCookieStore(cookieStore)
 			.build();
+
 
    //导出目录以及操作目录
 
@@ -102,7 +109,7 @@ public class HttpClientTest {
 		     int result=0;
 		     //没有autoId调用
 		      //本来已经拿了autobg的
-		     successLogin(false);
+//		     successLogin(false);
 		     
 		     //含有autoid的调用这个方法
 		     String content=null;
@@ -329,6 +336,17 @@ public class HttpClientTest {
 			fr.close();
 			String cookie=SESSIONID+AUTOBG.split(";")[0]+";";
 		     post.setHeader("Cookie",cookie );
+		     BasicClientCookie newCookie = new BasicClientCookie("name", "zhaoke");   
+		     newCookie.setVersion(0);    
+		     newCookie.setDomain("/pms/");   //设置范围  
+		     newCookie.setPath("/");   
+		     newCookie.setAttribute("SERVERID", "5313e4d40abd77f16efabaa01e4c2358|1483515173|1483515173");
+		     newCookie.setAttribute("AUTOBG", "5B471FC7C5AEEC0A115495380D2FA7DC5326FCA2A36D0D193CD18DB9CD42D33A6BE496BBF4B23BD427D95FD86378F7AED52482737387BC408E04ED4F55F595A7");
+	          cookieStore.addCookie(newCookie); 
+	          List<Cookie> cookies = cookieStore.getCookies();  
+	          for (int i = 0; i < cookies.size(); i++) {  
+	              System.out.println("Local cookie: " + cookies.get(i));  
+	          }  
 			HttpResponse httpResponse = httpClient.execute(post);
 			Map<String,Object>dataMap=new HashMap<String,Object>();
 			dataMap.put("result", printResponse(httpResponse));

@@ -114,7 +114,7 @@ public class DateChooser extends JPanel {
 
 		yearChoice.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				System.out.println(yearChoice.getSelectedIndex());
+//				System.out.println(yearChoice.getSelectedIndex());
 				if (yearChoice.getSelectedIndex() != gapYears) {
 					Integer selYear = (Integer) yearChoice.getSelectedItem();
 					Calendar cal = new GregorianCalendar(year, month, 1);
@@ -156,9 +156,9 @@ public class DateChooser extends JPanel {
 		dateContainerPanel.setLayout(grid);
 		cal.set(Calendar.DAY_OF_MONTH, 1);
 		int weekday = cal.get(Calendar.DAY_OF_WEEK);
-		System.out.println("weekday+" + weekday);
+//		System.out.println("weekday+" + weekday);
 		cal.add(Calendar.DAY_OF_MONTH, 1 - weekday);
-		System.out.println("Calendar.DAY_OF_MONTH=" + cal.get(Calendar.DAY_OF_MONTH));
+//		System.out.println("Calendar.DAY_OF_MONTH=" + cal.get(Calendar.DAY_OF_MONTH));
 
 		for (int i = 0; i < 7; i++) {
 			JLabel weekLabel = new JLabel(weekTitle[i], SwingConstants.CENTER);
@@ -313,28 +313,18 @@ public class DateChooser extends JPanel {
 							  result=-1;
 							  JOptionPane.showMessageDialog(frame, "请关闭你已经打开的Excel文件，再执行程序！！");
 						}catch(Exception e1){
-							
-							  JOptionPane.showMessageDialog(frame, "出错了"+e1.getMessage());
+				        JOptionPane.showMessageDialog(frame, "session过期了，点击确定后重新登陆，wait  a minute.......");
+							  try {
+								  //重新登陆
+								HttpClientTest.successLogin(true);
+								//登陆后再
+								 result=HttpClientTest.main(date);
+							} catch (Exception e3) {
+								  JOptionPane.showMessageDialog(frame, "出大bug 了，联系辉叔叔！");
+							}
 						}
-				    
 				      	if(result==0){
 				      	  JOptionPane.showMessageDialog(frame, "当前日期没数据");
-//				      		button1= new JButton("显示消息");
-//				      		con=jf.getContentPane();
-//				      		con.add(button1);
-//				      		 con.setLayout(new FlowLayout());
-//				      		 button1.addActionListener(new ActionListener(){
-
-//								@Override
-//								public void actionPerformed(ActionEvent e) {
-//									 if(e.getSource()==button1)
-//										  JOptionPane.showMessageDialog(jf, "这是一个简单的消息框");
-//										  else if(e.getSource()==button2)
-//										  JOptionPane.showMessageDialog(jf, "这是一个简单的消息框");
-//									
-//									
-//								}
-//				      		 });
 				      	}else if(result==-1){
 				      	     JOptionPane.showMessageDialog(frame, "当前日期有数据，其他数据已导出，除已打开Excel数据。请关闭Excel后重新执行程序");
 				      	}else if(result>0){
