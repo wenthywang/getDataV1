@@ -95,7 +95,6 @@ public class HttpClientTest {
 
 	
 	public static int main(final String date) throws Exception {
-		System.out.println(root);
 		System.out.println(autobg);
 	
 		
