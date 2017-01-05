@@ -55,7 +55,6 @@ public class ImageTest {
         try {
             // 将TRAIN_DIR目录的供比对的图片装载进来
             File dir = new File(TRAIN_DIR);
-            System.out.println(TRAIN_DIR);
             File[] files = dir.listFiles(new ImageFileFilter("jpg"));
             for (File file : files) {
                 trainMap.put(ImageIO.read(file), file.getName().charAt(0) + "");
@@ -415,11 +414,11 @@ public class ImageTest {
         return result;  
     }  
     
+    
     public static void main(String[] args) throws Exception {
         ImageTest ins = new ImageTest();
     
         // 第1步，下载验证码到DOWNLOAD_DIR
-//        ins.downloadImage();
         
        //  第2步，去除干扰的像素
 //        File dir = new File(DOWNLOAD_DIR);

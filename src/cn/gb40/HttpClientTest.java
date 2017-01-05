@@ -94,43 +94,21 @@ public class HttpClientTest {
    //导出目录以及操作目录
 
 	private    static  File resultTxt=new File(root+"result.txt");
-//	private static final File codeJPG=new	 File("E:\\mt-ide\\workspace\\Identifying-code\\temp3\\", "code.jpg");
-//	private static final String codeSource="E:\\mt-ide\\workspace\\Identifying-code\\temp3\\code.jpg";
-	private static final File codeJPG=new	 File(root+"Identifying-code\\temp3\\", "code.jpg");
+	//下载验证码路径
 	private static final String codeSource=root+"Identifying-code\\temp3\\code.jpg";
 	
 
 	
 	public static int main(final String date) throws Exception {
-		System.out.println(autobg);
-	
-		
-		// 创建一个HttpClient
-		     int result=0;
-		     //没有autoId调用
-		      //本来已经拿了autobg的
-//		     successLogin(false);
-		     
-		     //含有autoid的调用这个方法
-		     String content=null;
-		     boolean validate=false;
-         try{
-			 content=autoLogin(date);
-			 validate=true;
-}catch(Exception e){
-	  e.printStackTrace();
-	  successLogin(true);
-}
-         //避免请求两次
-		if(!validate){
-			 content=autoLogin(date);
-		}
+		   //尝试登陆 登陆成功则不重新登陆
+		    String content=autoLogin(date);
 			System.out.println(content);
-			FileCopyUtils.copy(content.getBytes(), resultTxt);
 			JSONObject obj = JSONObject.parseObject(content);
-			 result=obj.getIntValue("iTotalRecords");
+			int	result=obj.getIntValue("iTotalRecords");
+			 //根据返回的数据判断是否登陆成功，登陆失败后会抛出异常，外层尝试重新登陆
 			final JSONArray json = obj.getJSONArray("aaData");
 			if(result>0){
+				FileCopyUtils.copy(content.getBytes(), resultTxt);
 				try{
 				//导出数据 使用线程池 分开线线程执行
 					     ThreadPoolUtil.executorService.execute(new Runnable() {
@@ -255,14 +233,19 @@ public class HttpClientTest {
 
 	}
 	
+/**
+ * 获取验证码登陆后台-登陆失败用
+ * @return Map<String,Object>
+ * @throws ClientProtocolException
+ * @throws IOException
+ */
 	public static Map<String,Object> login() throws ClientProtocolException, IOException{
 		    HttpGet getCaptcha = new
 				 HttpGet("http://xmiles.cn/xmiles-manager/system/vacode.jsp");
 		    getCaptcha.setHeader("Cookie", SESSIONID);
 				 CloseableHttpResponse imageResponse = httpClient.execute(getCaptcha);
-						
-				 FileOutputStream out = new
-				 FileOutputStream(codeSource);
+				
+				 FileOutputStream out = new FileOutputStream(codeSource);
 				 byte[] bytes = new byte[8192];
 				 int len;
 				 while ((len = imageResponse.getEntity().getContent().read(bytes)) != -1) {
@@ -270,9 +253,16 @@ public class HttpClientTest {
 				 }
 				 out.close();
 				 String validateCode ="";
+				 File f=new File(codeSource);
 				 try {
-				 validateCode = ImageTest.getValidateCode(codeJPG);
-				 } catch (Exception e) {
+				 validateCode = ImageTest.getValidateCode(f);
+				 } 
+				 catch (Exception e) {
+					 System.out.println("[login] occur exception!"+e.getMessage());
+					 e.printStackTrace();
+				 }finally{
+					 //删除验证码图片
+					 f.delete();
 				 }
 				 System.out.println(validateCode);
 				 MessageDigest md = null;
@@ -336,11 +326,11 @@ public class HttpClientTest {
 			fr.close();
 			String cookie=SESSIONID+AUTOBG.split(";")[0]+";";
 		     post.setHeader("Cookie",cookie );
-		     BasicClientCookie newCookie = new BasicClientCookie("name", "zhaoke");   
+		     BasicClientCookie newCookie = new BasicClientCookie("name","xmile");   
 		     newCookie.setVersion(0);    
-		     newCookie.setDomain("/pms/");   //设置范围  
-		     newCookie.setPath("/");   
-		     newCookie.setAttribute("SERVERID", "5313e4d40abd77f16efabaa01e4c2358|1483515173|1483515173");
+		     newCookie.setDomain("xmiles.cn");   //设置范围  
+		     newCookie.setPath("/xmiles-manager/");   
+		     newCookie.setAttribute("SERVERID", "5313e4d40abd77f16efabaa01e4c2358|1483585972|1483585954");
 		     newCookie.setAttribute("AUTOBG", "5B471FC7C5AEEC0A115495380D2FA7DC5326FCA2A36D0D193CD18DB9CD42D33A6BE496BBF4B23BD427D95FD86378F7AED52482737387BC408E04ED4F55F595A7");
 	          cookieStore.addCookie(newCookie); 
 	          List<Cookie> cookies = cookieStore.getCookies();  
