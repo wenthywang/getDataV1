@@ -12,6 +12,18 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
+/**
+ * 
+ * <pre>
+ * 日期控件的按钮初始化。
+ * </pre>
+ * @author 王文辉  wangwenhui@jiaxincloud.com
+ * @version 1.00.00
+ * <pre>
+ * 修改记录
+ *    修改后版本:     修改人：  修改日期:     修改内容: 
+ * </pre>
+ */
 public class DateButton extends JButton {
 	private static final long serialVersionUID = 1L;
 	protected Color normalBackground;

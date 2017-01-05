@@ -18,7 +18,18 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-
+/**
+ *
+ * <pre>
+ * 根据文章标题统计结果。
+ * </pre>
+ * @author 王文辉  wangwenhui@jiaxincloud.com
+ * @version 1.00.00
+ * <pre>
+ * 修改记录
+ *    修改后版本:     修改人：  修改日期:     修改内容: 
+ * </pre>
+ */
 public class Test_1 {
 
 	private static final  File resultTxt=new File(HttpClientTest.root+"根据文章标题统计结果.txt");

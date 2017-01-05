@@ -5,9 +5,9 @@ package cn.gb40;
 
 /**
  * <pre>
- * 程序的中文名称。
+ * 返回json格式的实体。
  * </pre>
- * @author mmr  mmr@kungeek.com
+ * @author 王文辉  946374340@qq.com
  * @version 1.00.00
  * <pre>
  * 修改记录
@@ -16,15 +16,45 @@ package cn.gb40;
  */
 public class entity {
 	
+	/**
+	 * 时间
+	 */
 	private String time;
+	/**
+	 * UV
+	 */
 	private String UV;
+	/**
+	 * PV
+	 */
 	private String PV;
+	/**
+	 * 文章标题
+	 */
 	private String title;
+	/**
+	 * 模块
+	 */
 	private String ck_module;
+	/**
+	 * 推送日期
+	 */
 	private String pushdate;
+	/**
+	 * pv总数
+	 */
 	private int pvcount;
+	/**
+	 * uv总数
+	 */
 	private int uvcount;
+	/**
+	 * 文章id
+	 */
 	private String discoveryid;
+	/**
+	 * 推送日期-格式不同上
+	 */
 	private String pushdate2;
 
 	
@@ -149,16 +179,11 @@ public class entity {
 	public void setDiscoveryid(String discoveryid) {
 		this.discoveryid = discoveryid;
 	}
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "entity [time=" + time + ", UV=" + UV + ", PV=" + PV + ", title=" + title + ", ck_module=" + ck_module
 				+ ", pushdate=" + pushdate + ", pvcount=" + pvcount + ", uvcount=" + uvcount + ", discoveryid="
 				+ discoveryid + ", pushdate2=" + pushdate2 + "]";
 	}
-	
-	
 
 }

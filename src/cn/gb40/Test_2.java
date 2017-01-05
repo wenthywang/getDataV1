@@ -1,13 +1,10 @@
 package cn.gb40;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,7 +18,18 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-
+/**
+ * 
+ * <pre>
+ * 根据文章ID统计结果。
+ * </pre>
+ * @author 王文辉  wangwenhui@jiaxincloud.com
+ * @version 1.00.00
+ * <pre>
+ * 修改记录
+ *    修改后版本:     修改人：  修改日期:     修改内容: 
+ * </pre>
+ */
 public class Test_2 {
 	
 	private static final  File resultTxt=new File(HttpClientTest.root+"根据文章ID统计结果.txt");
@@ -246,25 +254,4 @@ public class Test_2 {
 						}  
                      
 }
-	   /**
-     * 读取txt文件的内容
-     * @param file 想要读取的文件对象
-     * @return 返回文件内容
-     */
-    public static String txt2String(InputStream file){
-        StringBuilder result = new StringBuilder();
-        try{
-        	BufferedReader br= new BufferedReader(new InputStreamReader(file,"GB2312"));  
-            
-        	//BufferedReader br = new BufferedReader(new FileReader(file),"GB2312");//构造一个BufferedReader类来读取文件
-            String s = null;
-            while((s = br.readLine())!=null){//使用readLine方法，一次读一行
-                result.append(System.lineSeparator()+s);
-            }
-            br.close();    
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-        return result.toString();
-    }
 }

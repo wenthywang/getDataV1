@@ -83,8 +83,14 @@ public class HttpClientTest {
 			
 	}
 	
+    /**
+     * 初始化配置
+     */
 	private static	RequestConfig requestConfig = RequestConfig.custom()
 			.setCookieSpec(CookieSpecs.STANDARD_STRICT).build();
+	/**
+	 * 初始化client
+	 */
 	private static   CloseableHttpClient httpClient = HttpClients.custom().
 			setDefaultRequestConfig(requestConfig)
 			.setDefaultCookieStore(cookieStore)
@@ -92,13 +98,17 @@ public class HttpClientTest {
 
 
    //导出目录以及操作目录
-
 	private    static  File resultTxt=new File(root+"result.txt");
 	//下载验证码路径
 	private static final String codeSource=root+"Identifying-code\\temp3\\code.jpg";
 	
 
-	
+	/**
+	 * 主函数
+	 * @param date 选择日期
+	 * @return 结果总数
+	 * @throws Exception
+	 */
 	public static int main(final String date) throws Exception {
 		   //尝试登陆 登陆成功则不重新登陆
 		    String content=autoLogin(date);
@@ -154,14 +164,18 @@ public class HttpClientTest {
 					System.out.println("文章标题="+job.get("title")); // 得到 每个对象中的属性值
 				}
 			}
-
 			}
-			
-
 			
 			return result;
 	}
 	
+	/**
+	 * 打印响应信息
+	 * @param httpResponse
+	 * @return
+	 * @throws ParseException
+	 * @throws IOException
+	 */
 	public static boolean printResponse(HttpResponse httpResponse)
 			throws ParseException, IOException {
 		// 获取响应消息实体
@@ -173,11 +187,6 @@ public class HttpClientTest {
 			result = true;
 		}
 		
-		
-		//根据返回的响应码判断
-		if(!result){
-//			successLogin(true);
-		}
 //		System.out.println("headers:");
 //		HeaderIterator iterator = httpResponse.headerIterator();
 //		while (iterator.hasNext()) {
@@ -194,9 +203,16 @@ public class HttpClientTest {
 		return result;
 	}
 	
+	/**
+	 *cookie map临时用
+	 */
 	public static Map<String, String> cookieMap = new HashMap<String, String>(64);
 	
-	// 从响应信息中获取cookie
+	/**
+	 * 从响应信息中获取cookie
+	 * @param httpResponse
+	 * @return
+	 */
 	public static String setCookie(HttpResponse httpResponse) {
 //		System.out.println("----setCookieStore");
 		Header headers[] = httpResponse.getHeaders("Set-Cookie");
@@ -318,6 +334,12 @@ public class HttpClientTest {
 				return dataMap;
 	}
 	
+	/**
+	 * 登陆操作
+	 * @return
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
 	public static Map<String,Object> login2() throws ClientProtocolException, IOException{
 		HttpPost post = new HttpPost("http://xmiles.cn/xmiles-manager/system/login.action");
 		// //注入post数据
@@ -345,8 +367,13 @@ public class HttpClientTest {
 
 	}
 	
-	public static CloseableHttpResponse query(
-			String c,String date){
+	/**
+	 * 调用后台获取业务数据
+	 * @param c cookie 
+	 * @param date 查询时间
+	 * @return CloseableHttpResponse
+	 */
+	public static CloseableHttpResponse query(String c,String date){
 		HttpPost g = new HttpPost(
 				"http://xmiles.cn/xmiles-manager/discovery/daily/querydiscoverystat.action");
 		g.setHeader("Cookie", c);
@@ -369,6 +396,12 @@ public class HttpClientTest {
 		
 	}
 	
+	/**
+	 * 自动登陆 携带autobg登陆
+	 * @param date 查询时间
+	 * @return
+	 * @throws Exception
+	 */
 	public static String  autoLogin(String date)  throws Exception{
 		String content=null;
 		CloseableHttpResponse r=null;
@@ -428,7 +461,13 @@ public class HttpClientTest {
 		
 	}
 	
-   public  static void successLogin(boolean check) throws ClientProtocolException, IOException{
+	/**
+	 * 登陆失败时可用，因为验证码不是100% 所以要用循环登陆直到登陆成功
+	 * @param check
+	 * @throws ClientProtocolException
+	 * @throws IOException
+	 */
+   public  static void successLogin(boolean check) throws Exception{
 	   while(check){
    	    Map<String,Object>data=login();
    	    if((boolean) data.get("result")){

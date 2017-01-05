@@ -11,9 +11,9 @@ import java.awt.image.PixelGrabber;
 
 /**
  * <pre>
- * 程序的中文名称。
+ * 图像处理 - 中值滤波（网上方法）。
  * </pre>
- * @author mmr  mmr@kungeek.com
+ * @author 王文辉  946374340@qq.com
  * @version 1.00.00
  * <pre>
  * 修改记录
