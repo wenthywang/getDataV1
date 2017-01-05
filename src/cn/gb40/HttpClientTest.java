@@ -100,7 +100,7 @@ public class HttpClientTest {
    //导出目录以及操作目录
 	private    static  File resultTxt=new File(root+"result.txt");
 	//下载验证码路径
-	private static final String codeSource=root+"Identifying-code\\temp3\\code.jpg";
+	private static final String codeSource=root+"code\\code.jpg";
 	
 
 	/**
