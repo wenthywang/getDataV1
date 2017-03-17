@@ -1,34 +1,24 @@
 package cn.gb40;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.swing.filechooser.FileSystemView;
 
-import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.springframework.util.FileCopyUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -72,10 +62,7 @@ public class HttpClientTest2 {
 					
 					@Override
 					public void run() {
-						String url1="https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2017-01-23"
-								+ "&leftTicketDTO.from_station=GZQ"
-								+ "&leftTicketDTO.to_station=CBQ"
-								+ "&purpose_codes=ADULT";
+						String url1="https://www.baidu.com";
 						try{
 							 sendHttpsGetUrl(null, url1, null);
 						}catch(Exception e){
@@ -85,21 +72,21 @@ public class HttpClientTest2 {
 				});
 				
 				
-				ThreadUtil.executeThread(new Runnable() {
-//					
-					@Override
-					public void run() {
-						String url="https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2017-01-24"
-								+ "&leftTicketDTO.from_station=GZQ"
-								+ "&leftTicketDTO.to_station=CBQ"
-								+ "&purpose_codes=ADULT";
-						try{
-							 sendHttpsGetUrl(null, url, null);
-						}catch(Exception e){
-						
-						}
-					}
-				});
+//				ThreadUtil.executeThread(new Runnable() {
+////					
+//					@Override
+//					public void run() {
+//						String url="https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2017-01-24"
+//								+ "&leftTicketDTO.from_station=GZQ"
+//								+ "&leftTicketDTO.to_station=CBQ"
+//								+ "&purpose_codes=ADULT";
+//						try{
+//							 sendHttpsGetUrl(null, url, null);
+//						}catch(Exception e){
+//						
+//						}
+//					}
+//				});
 			
 			
 		}
@@ -156,26 +143,14 @@ public class HttpClientTest2 {
 			}
 		
 		//下单操作 REPEAT_SUBMIT_TOKEN和key_check_isChange 这两个参数的定义不清楚
-		HttpPost g = new HttpPost(
-				"https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue");
-		g.setHeader("Cookie", "__NRF=47FBEDB9BE5B556676B9784A09A32C30; JSESSIONID=0A01D72AFCCE092B055AEA8777AB7E9BEF693BC0D5; BIGipServerotn=718733578.64545.0000; _jc_save_fromStation=%u5E7F%u5DDE%2CGZQ; _jc_save_toStation=%u6F6E%u6C55%2CCBQ; _jc_save_fromDate=2017-01-23; _jc_save_toDate=2016-12-29; _jc_save_wfdc_flag=dc; current_captcha_type=Z");
-		List<NameValuePair> valuePairs2 = new LinkedList<NameValuePair>();
-		valuePairs2.add(new BasicNameValuePair("purpose_codes", "00"));
-		valuePairs2.add(new BasicNameValuePair("key_check_isChange", UUID.randomUUID().toString()));
-		valuePairs2.add(new BasicNameValuePair("leftTicketStr", "W0kTOWxZe1gTaP3BqFt3MklsxVPjr0o4%2BynYGZn1A2j0Lmj8%2FvVyS2RxusE%3D"));
-		valuePairs2.add(new BasicNameValuePair("train_location", "Q7"));
-		valuePairs2.add(new BasicNameValuePair("seatDetailType", "000"));
-		valuePairs2.add(new BasicNameValuePair("roomType", "00"));
-		valuePairs2.add(new BasicNameValuePair("dwAll", "N"));
-		valuePairs2.add(new BasicNameValuePair("REPEAT_SUBMIT_TOKEN", UUID.randomUUID().toString()));
-		UrlEncodedFormEntity entity1 = new UrlEncodedFormEntity(valuePairs2, Consts.UTF_8);
-		g.setEntity(entity1);
+		HttpGet g = new HttpGet(
+				"https://files.jiaxincloud.com/nnvxytfuync0nq/mcs/2016/11/28/8a0849d5-dd96-4f03-a832-b6cad4f852e6.bmp");
 		HttpResponse r = null;
 		try {
 			r = httpClient1.execute(g);
 			HttpEntity respentity = r.getEntity();
-			String resp=EntityUtils.toString(respentity);
-			System.out.println(resp);
+//			String resp=EntityUtils.toString(respentity);
+			System.out.println(respentity.getContentLength());
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -234,6 +209,7 @@ public class HttpClientTest2 {
 			// 创建HttpGet
 			HttpGet httpPost = new HttpGet(url); 
 			httpPost.setHeader("content-type", "text/html; charset=utf-8");
+			httpPost.setHeader("Cookie", "x_hm_tuid=SiFVkJZzxQCtxO/mxEy9b/Q5LSuMutGEJ7s7CcAFUFkXGbGe5mW0OKOozQiAZUGm; cporder=ordervalue=6T4MXI4G4MAU%2fkvG0YwlvmGJ1quJ6ZHRMXkbVm%2bpjxb4dr9u6LFDSnmzM5JX6bpXhLcFZ4AcJyVcTworHghpzCxBkzRVu0VCmRFbT8H3bR6XdpJpejHk1bxH1VlnuVzUkZBjdOMF3PQ%3d; cporderV2=6T4MXI4G4MAU%2fkvG0YwlvmGJ1quJ6ZHRMXkbVm%2bpjxb4dr9u6LFDSnmzM5JX6bpXhLcFZ4AcJyVcTworHghpzCxBkzRVu0VCmRFbT8H3bR6XdpJpejHk1bxH1VlnuVzUkZBjdOMF3PQ%3d; _damai_sour=u2DQ6M02CViWf/6ki0CSk/xMtthY0Ixy9IAak9EAV5gdwyAjg9x6fg==; damai_login_QRCode=a46410ac-9484-465f-b059-9f42fe49a8d3; damai.cn_msgCount=0; damai.cn_user=4YZrINjO/OIJkhSfX66kXLb8IJs8mSdGVlOSRpb2dXysnuVK3QySdKoZgZ6rYih+; damai.cn_email=13660783361; damai.cn_nickName=%e8%be%89%e5%8f%94%e5%8f%94; damai_cn_user=4YZrINjO/OIJkhSfX66kXLb8IJs8mSdGVlOSRpb2dXysnuVK3QySdKoZgZ6rYih+; DaMaiTicketHistory=ProList=115685%402017%E4%BA%94%E6%9C%88%E5%A4%A9%20LIFE%20%5B%20%E4%BA%BA%E7%94%9F%E6%97%A0%E9%99%90%E5%85%AC%E5%8F%B8%20%5D%20%E5%B7%A1%E5%9B%9E%E6%BC%94%E5%94%B1%E4%BC%9A-%E5%B9%BF%E5%B7%9E%E7%AB%99%EF%BC%883%E6%9C%8825%E6%97%A5%EF%BC%89%40gz; cpSTAT_ok_pages=82; cpSTAT_ok_times=1; tkpid=Dx3LfDzyWm16MwoamOEmkKzLL1qtMfxoru6l0h4KXM4iJBjOnTveAo/uXjkDC0GB; CNZZDATA1256416394=1080610434-1486177823-https%253A%252F%252Fwww.damai.cn%252F%7C1486177823; page_tran_time=46.8747; cn_7415364c9dab5n09ff68_dplus=%7B%22distinct_id%22%3A%20%2215a0721311a3c8-01268cec72feae-3e64430f-15f900-15a0721311b3ab%22%2C%22%24_sessionid%22%3A%200%2C%22%24_sessionTime%22%3A%201486178882%2C%22%24dp%22%3A%200%2C%22%24_sessionPVTime%22%3A%201486178882%2C%22initial_view_time%22%3A%20%221486177823%22%2C%22initial_referrer%22%3A%20%22http%3A%2F%2Fappapi.damai.cn%2Fdamaiapi%2Fgotodamai.aspx%3F_action%3DGoURL%26uid%3Daaa893bbbareagzccc111500001ddddy%26api_key%3D05754b44-684e-4ef1-b69c-c49cf373ea53%26ProjectID%3D%26sorce%3D1%26host%3Dgz%2F%22%2C%22initial_referrer_domain%22%3A%20%22appapi.damai.cn%22%7D");
 			// 执行POST请求
 			HttpResponse response = httpClient.execute(httpPost); 
 			// 获取响应实体
@@ -241,61 +217,22 @@ public class HttpClientTest2 {
 			String s=EntityUtils.toString(entity);
 			System.out.println(s);
 			JSONObject obj=JSONObject.parseObject(s);
-			if(obj.getInteger("httpstatus")==200){
-				JSONArray dataArray=obj.getJSONArray("data");
+			if(obj.getInteger("Status")==200){
+				JSONArray dataArray=obj.getJSONObject("Data").getJSONArray("prices");
 				 Iterator<Object> it = dataArray.iterator();
 				 
 				 while (it.hasNext()) {
 					 JSONObject ob = (JSONObject) it.next();
-					 JSONObject result = ob.getJSONObject("queryLeftNewDTO");
-					 if(result!=null){
-							String isHasBill=result.getString("ze_num");
-							if(isHasBill.equals("无")||isHasBill.equals("--")){
-							}else{
-									HttpPost g = new HttpPost(
-											"https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue");
-									g.setHeader("Cookie", "__NRF=47FBEDB9BE5B556676B9784A09A32C30; JSESSIONID=0A01D72AFCCE092B055AEA8777AB7E9BEF693BC0D5; BIGipServerotn=718733578.64545.0000; _jc_save_fromStation=%u5E7F%u5DDE%2CGZQ; _jc_save_toStation=%u6F6E%u6C55%2CCBQ; _jc_save_fromDate=2017-01-23; _jc_save_toDate=2016-12-29; _jc_save_wfdc_flag=dc; current_captcha_type=Z");
-									List<NameValuePair> valuePairs2 = new LinkedList<NameValuePair>();
-									valuePairs2.add(new BasicNameValuePair("purpose_codes", "00"));
-									valuePairs2.add(new BasicNameValuePair("key_check_isChange", UUID.randomUUID().toString()));
-									valuePairs2.add(new BasicNameValuePair("leftTicketStr", result.getString("yp_info")));
-									valuePairs2.add(new BasicNameValuePair("train_location", "Q7"));
-									valuePairs2.add(new BasicNameValuePair("seatDetailType", "000"));
-									valuePairs2.add(new BasicNameValuePair("roomType", "00"));
-									valuePairs2.add(new BasicNameValuePair("dwAll", "N"));
-									valuePairs2.add(new BasicNameValuePair("REPEAT_SUBMIT_TOKEN", UUID.randomUUID().toString()));
-									UrlEncodedFormEntity entity1 = new UrlEncodedFormEntity(valuePairs2, Consts.UTF_8);
-									g.setEntity(entity1);
-									HttpResponse r = null;
-									try {
-										r = httpClient.execute(g);
-										HttpEntity respentity = r.getEntity();
-										String resp=EntityUtils.toString(respentity);
-										System.out.println(resp);
-									} catch (ClientProtocolException e) {
-										e.printStackTrace();
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-								
-								
-								String start_train_date=result.getString("start_train_date");
-								String year=start_train_date.substring(0, 4);
-								String month=start_train_date.substring(4, 6);
-								String day=start_train_date.substring(6);
-								start_train_date=year+"-"+month+"-"+day;
-								String start_time=result.getString("start_time");
-								String arrive_time=result.getString("arrive_time");
-								String content="有票->"+"start_time->"+start_time+",arrive_time->"+arrive_time+",开车时间->"+start_train_date;
-								System.out.println(content);
-								   FileReader fr=new FileReader(resultTxt);
-									 String info=FileCopyUtils.copyToString(fr);
-									 content=content+"/n"+info;
-							   FileCopyUtils.copy(content.getBytes(), resultTxt);
-							}
+					 String result = ob.getString("Status");
+					 String priceId=ob.getString("PriceID");
+					 if(priceId.equals("11660892")||priceId.equals("11615680")){
+						 if(result!=null&&result.equals("0")){
+							String name=ob.getString("PriceName");
+							 System.out.println(name+"->有票");
+						 }
 					 }
-				
-					 }
+//				System.out.println(result);
+			}
 			}
 //			 bs = IOUtils.toByteArray(entity.getContent());
 //			 if (null != entity) {

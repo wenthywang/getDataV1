@@ -313,16 +313,8 @@ public class DateChooser extends JPanel {
 						catch(FileNotFoundException e1){
 							  result=-1;
 							  JOptionPane.showMessageDialog(frame, "请关闭你已经打开的Excel文件，再执行程序！！");
-						}catch(Exception e1){
-				        JOptionPane.showMessageDialog(frame, "session过期了，点击确定后重新登陆，wait  a minute.......");
-							  try {
-								  //重新登陆
-								HttpClientTest.successLogin(true);
-								//登陆后再
-								 result=HttpClientTest.main(date);
-							} catch (Exception e3) {
-								  JOptionPane.showMessageDialog(frame, "出大bug 了，联系辉叔叔！");
-							}
+						}catch(Exception e3){
+				              e3.printStackTrace();
 						}
 				      	if(result==0){
 				      	  JOptionPane.showMessageDialog(frame, "当前日期没数据");

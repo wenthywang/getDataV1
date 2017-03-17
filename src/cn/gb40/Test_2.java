@@ -130,7 +130,7 @@ public class Test_2 {
 							out.write("PV总数："+PVCount+"\r\n"); // \r\n即为换行
 							out.write("UV总数："+UVCount+"\r\n"); // \r\n即为换行
 						     for(entity entity:resultList){
-						        	System.out.println(entity.getTitle()+"--------PV: "+entity.getPvcount()+"   UV: "+entity.getUvcount());
+//						        	System.out.println(entity.getTitle()+"--------PV: "+entity.getPvcount()+"   UV: "+entity.getUvcount());
 						        	
 						        	out.write(entity.getTitle()+"--------PV: "+entity.getPvcount()+"   UV: "+entity.getUvcount()+"\r\n"); // \r\n即为换行
 						     }
@@ -140,7 +140,7 @@ public class Test_2 {
 						 	for (int i = 0; i < resultList.size(); i++) {
 					        	for(int j=i+1;j<resultList.size();j++){
 							        	if(resultList.get(i).getDiscoveryid().equals(resultList.get(j).getDiscoveryid())){
-							        		System.out.println(resultList.get(j).getTitle()+"--------文章ID："+resultList.get(j).getDiscoveryid());
+//							        		System.out.println(resultList.get(j).getTitle()+"--------文章ID："+resultList.get(j).getDiscoveryid());
 							        		out.write("********文章ID："+resultList.get(j).getDiscoveryid()+"********"+"\r\n");
 							        		out.write(resultList.get(j).getTitle()+"  发布日期："+resultList.get(j).getPushdate()+"\r\n"+resultList.get(i).getTitle()+"  发布日期："+resultList.get(i).getPushdate()+"\r\n"); // \r\n即为换行
 							        		out.write("\r\n"); // \r\n即为换行	        	
