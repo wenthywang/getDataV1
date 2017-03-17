@@ -51,6 +51,7 @@ import com.alibaba.fastjson.JSONObject;
  *    修改后版本:     修改人：  修改日期:     修改内容: 
  * </pre>
  */
+@SuppressWarnings("deprecation")
 public class HttpClientTest {
 	public  static String root="";
 	private static int pageSize=1000;
@@ -64,8 +65,6 @@ public class HttpClientTest {
 				.getHomeDirectory();
 			String desktopPath = desktopDir.getAbsolutePath();
 			root=desktopPath+"\\";
-			
-			
 	}
 	
     /**
@@ -115,12 +114,11 @@ public class HttpClientTest {
 				contentList.add(content);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw e;
 		}
 		JSONObject obj =null;
 		int result=0;
-		if(StringUtils.isNotEmpty(content)){
+		if(StringUtils.isNotEmpty(content)&&context!=null){
 			 obj = JSONObject.parseObject(content);
 			  result=obj.getIntValue("iTotalRecords");
 			  System.out.println("记录总数->"+result);
@@ -142,63 +140,77 @@ public class HttpClientTest {
 					JSONArray temp=  obj.getJSONArray("aaData");
 					json.addAll(temp);
 				}
+				  
+				  //导出当前日期数据
+				  exportToExcel(json, date);
 			  }
 			 
 		}
-			
-			//根据返回的数据判断是否登陆成功，登陆失败后会抛出异常，外层尝试重新登陆
-			final JSONArray jsonFinal = json;
-			if(result>0){
-				FileCopyUtils.copy(json.toJSONString().getBytes(), resultTxt);
-				try{
-				//导出数据 使用线程池 分开线线程执行
-					     ThreadPoolUtil.executorService.execute(new Runnable() {
-								@Override
-								public void run() {
-									 try {
-										 //执行文章id任务
-										Test_1.main(jsonFinal,date);
-									} catch (FileNotFoundException e) {
-				                       e.printStackTrace();
-									}
-								}
-							});
-					     ThreadPoolUtil.executorService.execute(new Runnable() {
-								@Override
-								public void run() {
-									 try {
-										 //执行标题线程
-										Test_2.main(jsonFinal,date);
-									} catch (FileNotFoundException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-							});
-                
-          
-                 
-//			if (json.size() > 0) {
-//				System.out.println("文章总数："+json.size());
-//				for (int i = 0; i < json.size(); i++) {
-//					JSONObject job = json.getJSONObject(i); // 遍历 jsonarray 数组，把每一个对象转成 json 对象
-//					System.out.println("文章标题="+job.get("title")); // 得到 每个对象中的属性值
-//				}
-//			}
-		} catch ( Exception e) {
-					FileCopyUtils.copy(content.getBytes(), resultTxt);
-			}
-//			if (json.size() > 0) {
-//				System.out.println("文章总数："+json.size());
-//				for (int i1 = 0; i1 < json.size(); i1++) {
-//					JSONObject job = json.getJSONObject(i1); // 遍历 jsonarray 数组，把每一个对象转成 json 对象
-//					System.out.println("文章标题="+job.get("title")); // 得到 每个对象中的属性值
-//				}
-//			}
-			}
-			
 			return result;
 	}
+	
+	
+	/**
+	 * 导出数据到excel 和txt
+	 * @param json 数据数组
+	 * @param date 当前查询日期
+	 */
+	public  static void exportToExcel(final JSONArray json,final String date){
+
+			try {
+				FileCopyUtils.copy(json.toJSONString().getBytes(), resultTxt);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			try{
+			//导出数据 使用线程池 分开线线程执行
+				     ThreadPoolUtil.executorService.execute(new Runnable() {
+							@Override
+							public void run() {
+								 try {
+									 //执行文章id任务
+									Test_1.main(json,date);
+								} catch (FileNotFoundException e) {
+			                       e.printStackTrace();
+								}
+							}
+						});
+				     ThreadPoolUtil.executorService.execute(new Runnable() {
+							@Override
+							public void run() {
+								 try {
+									 //执行标题线程
+									Test_2.main(json,date);
+								} catch (FileNotFoundException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+						});
+            
+      
+             
+//		if (json.size() > 0) {
+//			System.out.println("文章总数："+json.size());
+//			for (int i = 0; i < json.size(); i++) {
+//				JSONObject job = json.getJSONObject(i); // 遍历 jsonarray 数组，把每一个对象转成 json 对象
+//				System.out.println("文章标题="+job.get("title")); // 得到 每个对象中的属性值
+//			}
+//		}
+	} catch ( Exception e) {
+				e.printStackTrace();
+		}
+//		if (json.size() > 0) {
+//			System.out.println("文章总数："+json.size());
+//			for (int i1 = 0; i1 < json.size(); i1++) {
+//				JSONObject job = json.getJSONObject(i1); // 遍历 jsonarray 数组，把每一个对象转成 json 对象
+//				System.out.println("文章标题="+job.get("title")); // 得到 每个对象中的属性值
+//			}
+//		}
+		
+	}
+	
 	
 	/**
 	 * 打印响应信息
@@ -226,7 +238,7 @@ public class HttpClientTest {
 //		}
 		// 判断响应实体是否为空
 		if (entity != null) {
-			String responseString = EntityUtils.toString(entity);
+			String responseString = EntityUtils.toString(entity,"UTF-8");
 			System.out.println("response length:" + responseString.length());
 			System.out.println("response content:" + responseString.replace("\r\n", ""));
 			
@@ -320,12 +332,13 @@ public class HttpClientTest {
 	
 	
 	
-	/**
-	 * 调用后台获取业务数据
-	 * @param c cookie 
-	 * @param date 查询时间
-	 * @return CloseableHttpResponse
-	 */
+/**
+ * 调用后台查询业务数据
+ * @param date 时间
+ * @param context 上下文
+ * @param pageNum 当前页码
+ * @return 查询结果
+ */
 	public static String query(String date,HttpContext context,int pageNum){
 		String result=null;
 		String url="http://xmiles.cn/xmiles-manager/discovery/daily/querydiscoverystat.action";
@@ -350,7 +363,7 @@ public class HttpClientTest {
 	        json.put("fromDate", date);
 	        json.put("jquery-table_length", pageSize);
 	        json.put("aoData", aoData);
-	        json.put("discoveryid", "");
+	        
 			try {
 				result = HttpUtil.post(url, "x-www-form-urlencoded", json.toJSONString(),context);
 			} catch (Exception e) {
@@ -360,7 +373,6 @@ public class HttpClientTest {
 		return result;
 		
 	}
-	
 	
 	/**
 	 * 登陆失败时可用，因为验证码不是100% 所以要用循环登陆直到登陆成功
@@ -382,5 +394,5 @@ public class HttpClientTest {
       }
 	   return localContext;
    }
-   
+   	
 }
