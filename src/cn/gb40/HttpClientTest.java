@@ -55,6 +55,9 @@ import com.alibaba.fastjson.JSONObject;
 public class HttpClientTest {
 	public  static String root="";
 	private static int pageSize=1000;
+	
+	//map保存上下文
+	private static Map<String,HttpContext>contextMap=new HashMap<String,HttpContext>();
 
 
 	/**
@@ -82,7 +85,6 @@ public class HttpClientTest {
 	 */
 	private static   CloseableHttpClient httpClient = HttpClients.custom().
 			setDefaultRequestConfig(requestConfig)
-			
 			.build();
 
 
@@ -91,9 +93,6 @@ public class HttpClientTest {
 	//下载验证码路径
 	private static final String codeSource=root+"code\\code.jpg";
 	
-
-	
-	
 	/**
 	 * 主函数
 	 * @param date 选择日期
@@ -101,14 +100,23 @@ public class HttpClientTest {
 	 * @throws Exception
 	 */
 	public static int main( final String  date) throws Exception {
-		
-		 //尝试登陆 登陆成功则不重新登陆
 		String content="";
 		HttpContext context=null;
 		List<String>contentList=new ArrayList<String>();
 		JSONArray json =new JSONArray();
 		try {
-			 context=successLogin(true);
+			//查询context 保存到map
+			HttpContext contextTemp=	contextMap.get("context");
+			if(contextTemp!=null){
+				context=	contextTemp;
+			}else{
+				//登录后获得的context保存到map
+				 context=successLogin(true);
+				 if(context!=null){
+						contextMap.put("context", context);
+				 }
+			}
+		
 			if(context!=null){
 				content=	query(date,context,1);
 				contentList.add(content);
@@ -123,6 +131,7 @@ public class HttpClientTest {
 			  result=obj.getIntValue("iTotalRecords");
 			  System.out.println("记录总数->"+result);
 			  if(result>0){
+				  //根据总数分页查询
 				  int pageCount=result/pageSize;
 				  int hasNextPage=result%pageSize;
 				  if(hasNextPage>0){
@@ -156,7 +165,6 @@ public class HttpClientTest {
 	 * @param date 当前查询日期
 	 */
 	public  static void exportToExcel(final JSONArray json,final String date){
-
 			try {
 				FileCopyUtils.copy(json.toJSONString().getBytes(), resultTxt);
 			} catch (IOException e1) {
