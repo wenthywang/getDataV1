@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import javax.swing.filechooser.FileSystemView;
 
@@ -52,7 +53,7 @@ import com.alibaba.fastjson.JSONObject;
  * </pre>
  */
 @SuppressWarnings("deprecation")
-public class HttpClientTest {
+public class GetJsonData {
 	public  static String root="";
 	private static int pageSize=1000;
 	
@@ -78,7 +79,7 @@ public class HttpClientTest {
 			.setConnectionRequestTimeout(6000000)
 			.setSocketTimeout(6000000)
 			.setCookieSpec(CookieSpecs.STANDARD_STRICT).
-		
+			setExpectContinueEnabled(false).
 			build();
 	/**
 	 * 初始化client
@@ -101,8 +102,8 @@ public class HttpClientTest {
 	 */
 	public static int main( final String  date) throws Exception {
 		String content="";
+		
 		HttpContext context=null;
-		List<String>contentList=new ArrayList<String>();
 		JSONArray json =new JSONArray();
 		try {
 			//查询context 保存到map
@@ -116,10 +117,8 @@ public class HttpClientTest {
 						contextMap.put("context", context);
 				 }
 			}
-		
 			if(context!=null){
 				content=	query(date,context,1);
-				contentList.add(content);
 			}
 		} catch (Exception e) {
 			throw e;
@@ -130,6 +129,8 @@ public class HttpClientTest {
 			 obj = JSONObject.parseObject(content);
 			  result=obj.getIntValue("iTotalRecords");
 			  System.out.println("记录总数->"+result);
+				JSONArray temp=  obj.getJSONArray("aaData");
+				json.addAll(temp);
 			  if(result>0){
 				  //根据总数分页查询
 				  int pageCount=result/pageSize;
@@ -139,19 +140,27 @@ public class HttpClientTest {
 				  }
 				  
 				  if(pageCount>1){
+					  ArrayList<Future<JSONArray>> futures = new ArrayList<Future<JSONArray>>();  
 					  for(int i=2;i<=pageCount;i++){
-							content=	query(date,context,i);
-						  contentList.add(content);
+						  QueryTask t=  new QueryTask(i, context, date);
+						 // 创建任务并提交
+						  Future<JSONArray> f = ThreadUtil.getThreadPool().submit(t);  
+						  futures.add(f);  
 					  }
+					  
+					  for (Future<JSONArray> f : futures) {  
+				            try {  
+				            	//检测当前任务是否已经完成
+				                 if(f.isDone())  {
+				                	 json.addAll(f.get());
+				                 }
+				            } catch (Exception e) {  
+				                e.printStackTrace();  
+				            }  
+				        }  
 				  }
-				  for (String s : contentList) {
-					  obj = JSONObject.parseObject(s);
-					JSONArray temp=  obj.getJSONArray("aaData");
-					json.addAll(temp);
-				}
-				  
 				  //导出当前日期数据
-				  exportToExcel(json, date);
+			      exportToExcel(json, date);
 			  }
 			 
 		}
@@ -173,7 +182,7 @@ public class HttpClientTest {
 			}
 			try{
 			//导出数据 使用线程池 分开线线程执行
-				     ThreadPoolUtil.executorService.execute(new Runnable() {
+				ThreadUtil.executeThread(new Runnable() {
 							@Override
 							public void run() {
 								 try {
@@ -184,7 +193,7 @@ public class HttpClientTest {
 								}
 							}
 						});
-				     ThreadPoolUtil.executorService.execute(new Runnable() {
+				ThreadUtil.executeThread(new Runnable() {
 							@Override
 							public void run() {
 								 try {

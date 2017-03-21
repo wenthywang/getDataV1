@@ -32,8 +32,8 @@ import com.alibaba.fastjson.JSONObject;
  */
 public class Test_1 {
 
-	private static final  File resultTxt=new File(HttpClientTest.root+"根据文章标题统计结果.txt");
-	private static final String excelName=HttpClientTest.root+"根据文章标题统计结果";
+	private static final  File resultTxt=new File(GetJsonData.root+"根据文章标题统计结果.txt");
+	private static final String excelName=GetJsonData.root+"根据文章标题统计结果";
 	
 	@SuppressWarnings({ "unchecked", "rawtypes"})
 	public static void main(JSONArray json,String date) throws FileNotFoundException {

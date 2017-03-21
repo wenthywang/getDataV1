@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
  */
 public class ThreadUtil {
 	
-	private static ExecutorService notifyService = Executors.newFixedThreadPool(1000);
+	private static ExecutorService notifyService = Executors.newFixedThreadPool(10);
 
 	/**
 	 * 通知接受到新的工单

@@ -308,7 +308,7 @@ public class DateChooser extends JPanel {
 						System.out.println(datePicker.getSelectedDate());
 					 	int result=0;
 						try{
-						  	 result=HttpClientTest.main(date);
+						  	 result=GetJsonData.main(date);
 						}
 						catch(FileNotFoundException e1){
 							  result=-1;
