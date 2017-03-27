@@ -151,14 +151,21 @@ public class GetJsonData {
 					  for (Future<JSONArray> f : futures) {  
 				            try {  
 				            	//检测当前任务是否已经完成
-				                 if(f.isDone())  {
-				                	 json.addAll(f.get());
-				                 }
+				            	while(true){
+				    				if(f.isDone() && !f.isCancelled()){
+				    					json.addAll(f.get());
+				    					break;
+				    				}
+				    				else{
+				    					Thread.sleep(100);
+				    				}
+				    			}
 				            } catch (Exception e) {  
 				                e.printStackTrace();  
 				            }  
 				        }  
 				  }
+				  
 				  //导出当前日期数据
 			      exportToExcel(json, date);
 			  }
